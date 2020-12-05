@@ -1,3 +1,4 @@
+added cmakelists.txt for windows.
 
 Application is decomposed in 3 main parts.
 
