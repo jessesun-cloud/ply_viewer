@@ -50,8 +50,9 @@ private slots:
 
 private:
   void _loadPLY(const QString& plyFilePath);
-  void _loadPTX(const QString& plyFilePath);
+  void _loadPTX(const std::string& plyFilePath);
   void _load(const QString& plyFilePath);
+  void _loadE57(const std::string& plyFilePath);
   void _cleanup();
   void _drawFrameAxis();
   QVector3D _unproject(int x, int y) const;

@@ -73,7 +73,7 @@ MainWindow::MainWindow()
 void MainWindow::_openFileDialog()
 {
   const QString filePath = QFileDialog::getOpenFileName(this, tr("Open PLY file"), "",
-                           tr("Cloud Files (*.ply *.ptx)"));
+                           tr("Cloud Files (*.ply *.ptx *.e57)"));
   if (!filePath.isEmpty())
   {
     _openView(filePath);
