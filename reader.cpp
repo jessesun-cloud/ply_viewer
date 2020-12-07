@@ -1,6 +1,8 @@
 #include "scene.h"
 #include <cmath>
+#ifdef SUPPORT_PTX
 #include <ptxreader.hpp>
+#endif
 #include <limits>
 #ifdef _WIN32
 #include <filesystem>
@@ -12,6 +14,7 @@ namespace fs = std::experimental::filesystem;
 
 void Scene:: _loadPTX(const QString& FilePath)
 {
+#ifdef SUPPORT_PTX
   PtxReader reader(FilePath.toStdString().c_str());
   vector< shared_ptr<ScanNode>> nodes;
   reader.LoadScan(1, nodes);
@@ -32,6 +35,7 @@ void Scene:: _loadPTX(const QString& FilePath)
     nodes[i]->GetBox((double*)&_pointsBoundMin, (double*)&_pointsBoundMax);
   }
   // update bounds
+#endif
 }
 
 void Scene::_load(const QString& FilePath)
@@ -43,8 +47,12 @@ void Scene::_load(const QString& FilePath)
   {
     _loadPLY(FilePath);
   }
+#ifdef SUPPORT_PTX
   else if (ext == ".ptx")
   {
     _loadPTX(FilePath);
   }
+#endif
+  else
+  { throw std::runtime_error("not support"); }
 }
