@@ -12,6 +12,7 @@ set(PROJECT_SRCS
   scene.cpp
   viewer.cpp  
   main.cpp  
+  reader.cpp
 )
 
 InitQt("Core;Widgets;LinguistTools;OpenGL")
@@ -22,6 +23,7 @@ SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} /DEBUG")
 set(APP "plyViewer")
 add_executable(${APP} "${PROJECT_SRCS}" "${PUBLIC_HEADERS}" "${UI_RESOURCES}" readme.txt)
 target_link_libraries(${APP}  opengl32.lib)
+target_link_libraries(${APP}  ptxlib)
 target_link_libraries(${APP}  Qt5::Core  Qt5::Widgets  Qt5::OpenGL )
 if(WIN32)
 	  AddQtDllCopyTarget(${APP})

@@ -41,8 +41,8 @@ protected:
   void paintGL() Q_DECL_OVERRIDE;
   void resizeGL(int width, int height) Q_DECL_OVERRIDE;
 
-  void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-  void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+  void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+  void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
 
 
 private slots:
@@ -50,6 +50,8 @@ private slots:
 
 private:
   void _loadPLY(const QString& plyFilePath);
+  void _loadPTX(const QString& plyFilePath);
+  void _load(const QString& plyFilePath);
   void _cleanup();
   void _drawFrameAxis();
   QVector3D _unproject(int x, int y) const;
