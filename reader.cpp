@@ -31,8 +31,15 @@ void Scene:: _loadPTX(const QString& FilePath)
     for (int j = 0; j < np; j++)
     {
       memcpy(_pointsData.data() + (size + j) * 4, pts.data() + j * 3, 12);
+      _pointsData[(size + j) * 4 + 3] = i;
     }
-    nodes[i]->GetBox((double*)&_pointsBoundMin, (double*)&_pointsBoundMax);
+    double mi[3], mx[3];
+    nodes[i]->GetBox(mi, mx);
+    for (int i = 0; i < 3; i++)
+    {
+      _pointsBoundMin[i] = mi[i];
+      _pointsBoundMax[i] = mx[i];
+    }
   }
   // update bounds
 #endif
