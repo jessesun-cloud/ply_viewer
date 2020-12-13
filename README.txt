@@ -1,4 +1,7 @@
 added cmakelists.txt for windows.
+able to view PTX E57 point cloud format
+
+-------------------------
 
 Application is decomposed in 3 main parts.
 
