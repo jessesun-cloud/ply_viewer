@@ -15,6 +15,46 @@
 
 namespace fs = std::experimental::filesystem;
 
+void AddNode(vector< shared_ptr<ScanNode>> &nodes,
+  QVector<float>& _pointsData,
+  size_t& _pointsCount,
+  QVector3D& _pointsBoundMin,
+  QVector3D& _pointsBoundMax)
+{
+  size_t size = 0;
+  for (int i = 0; i < nodes.size(); i++)
+  {
+    vector<float>& pts = nodes[i]->Position();
+    size_t np = pts.size() / 3;
+    size = _pointsCount;
+    _pointsCount += np;
+    _pointsData.resize((int)_pointsCount * 4);
+    for (int j = 0; j < np; j++)
+    {
+      memcpy(_pointsData.data() + (size + j) * 4, pts.data() + j * 3, 12);
+      _pointsData[((int)size + j) * 4 + 3] = i;
+    }
+    double mi[3], mx[3];
+    nodes[i]->GetBox(mi, mx);
+    if (i == 0)
+    {
+      for (int i = 0; i < 3; i++)
+      {
+        _pointsBoundMin[i] = mi[i];
+        _pointsBoundMax[i] = mx[i];
+      }
+    }
+    else
+    {
+      for (int i = 0; i < 3; i++)
+      {
+        _pointsBoundMax[i] = std::max((float)mx[i], _pointsBoundMax[i]);
+        _pointsBoundMin[i] = std::min((float)mi[i], _pointsBoundMin[i]);
+      }
+    }
+  }
+}
+
 void Scene:: _loadPTX(const std::string& FilePath)
 {
 #ifdef SUPPORT_PTX
@@ -23,28 +63,8 @@ void Scene:: _loadPTX(const std::string& FilePath)
   reader.LoadScan(1, nodes);
   _pointsData.clear();
   _pointsCount = 0;
-  size_t size = 0;
-  for (int i = 0; i < nodes.size(); i++)
-  {
-    vector<float>& pts = nodes[i]->Position();
-    size_t np = pts.size() / 3;
-    size = _pointsCount;
-    _pointsCount += np;
-    _pointsData.resize(_pointsCount * 4);
-    for (int j = 0; j < np; j++)
-    {
-      memcpy(_pointsData.data() + (size + j) * 4, pts.data() + j * 3, 12);
-      _pointsData[(size + j) * 4 + 3] = i;
-    }
-    double mi[3], mx[3];
-    nodes[i]->GetBox(mi, mx);
-    for (int i = 0; i < 3; i++)
-    {
-      _pointsBoundMin[i] = mi[i];
-      _pointsBoundMax[i] = mx[i];
-    }
-  }
-  // update bounds
+  AddNode(nodes, _pointsData, _pointsCount,
+     _pointsBoundMin, _pointsBoundMax);
 #endif
 }
 
@@ -90,28 +110,8 @@ void Scene::_loadE57(const std::string& FilePath)
   LoadScan(reader,  nodes);
   _pointsData.clear();
   _pointsCount = 0;
-  size_t size = 0;
-  for (int i = 0; i < nodes.size(); i++)
-  {
-    vector<float>& pts = nodes[i]->Position();
-    size_t np = pts.size() / 3;
-    size = _pointsCount;
-    _pointsCount += np;
-    _pointsData.resize(_pointsCount * 4);
-    for (int j = 0; j < np; j++)
-    {
-      memcpy(_pointsData.data() + (size + j) * 4, pts.data() + j * 3, 12);
-      _pointsData[(size + j) * 4 + 3] = i;
-    }
-    double mi[3], mx[3];
-    nodes[i]->GetBox(mi, mx);
-    for (int i = 0; i < 3; i++)
-    {
-      _pointsBoundMin[i] = mi[i];
-      _pointsBoundMax[i] = mx[i];
-    }
-  }
-  // update bounds
+  AddNode(nodes, _pointsData, _pointsCount,
+    _pointsBoundMin, _pointsBoundMax);
 #endif
 }
 
@@ -130,7 +130,6 @@ void Scene::_load(const QString& FilePath)
     _loadPTX(FilePath.toStdString());
   }
 #endif
-
 #ifdef SUPPORT_E57
   else if (ext == ".e57")
   {
