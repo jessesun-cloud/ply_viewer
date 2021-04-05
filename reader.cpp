@@ -22,6 +22,7 @@ void AddNode(vector< shared_ptr<ScanNode>> &nodes,
   QVector3D& _pointsBoundMax)
 {
   size_t size = 0;
+  bool hasData = _pointsCount != 0;
   for (int i = 0; i < nodes.size(); i++)
   {
     vector<float>& pts = nodes[i]->Position();
@@ -36,7 +37,7 @@ void AddNode(vector< shared_ptr<ScanNode>> &nodes,
     }
     double mi[3], mx[3];
     nodes[i]->GetBox(mi, mx);
-    if (i == 0)
+    if (hasData == false)
     {
       for (int i = 0; i < 3; i++)
       {

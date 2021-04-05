@@ -1,5 +1,5 @@
 #include "scene.h"
-
+#include <chrono>
 #include <QMouseEvent>
 #include <QOpenGLShaderProgram>
 #include <QCoreApplication>
@@ -170,6 +170,8 @@ void Scene::initializeGL()
 
 void Scene::paintGL()
 {
+  double start = GetTickCount();
+  auto startt = std::chrono::system_clock::now();
   // ensure GL flags
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glEnable(GL_DEPTH_TEST);
@@ -237,7 +239,17 @@ void Scene::paintGL()
   }
 
   _drawFrameAxis();
-
+  double end = GetTickCount();
+  auto endt = std::chrono::system_clock::now();
+  std::chrono::duration<double> elapsed_seconds;
+  {
+    elapsed_seconds = endt - startt;
+  }
+  static double avg = 0;
+  double time = elapsed_seconds.count();
+  avg = avg * .9 + 0.1 * (time) / 1000.0;
+  int fps = 1 / (avg + 0.0001);
+  printf("fps %d\r", fps);
 }
 
 
