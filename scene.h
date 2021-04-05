@@ -34,7 +34,7 @@ public slots:
 
 signals:
   void pickpointsChanged(const QVector<QVector3D> points);
-
+  void FpsChanged(float fps);
 
 protected:
   void initializeGL() Q_DECL_OVERRIDE;

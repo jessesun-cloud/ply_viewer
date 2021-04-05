@@ -40,6 +40,7 @@ Viewer::Viewer(const QString& filePath)
   //
   _scene = new Scene(filePath);
   connect(_scene, &Scene::pickpointsChanged, this, &Viewer::_updateMeasureInfo);
+  connect(_scene, &Scene::FpsChanged, this, &Viewer::UpdateFps);
 
   //
   // make shared camera
@@ -156,6 +157,11 @@ Viewer::Viewer(const QString& filePath)
   controlPanel->addWidget(gbMeasuringTool);
   controlPanel->addStretch(2);
 
+  _FpsLabel = new QLabel(tr("Fps:"));
+  _FpsLabel->setMaximumWidth(100);
+  controlPanel->addWidget(_FpsLabel);
+  controlPanel->addStretch(2);
+
   //
   // compose main layout
   //
@@ -254,4 +260,11 @@ void Viewer::_updateMeasureInfo(const QVector<QVector3D>& points) {
     text += tr("Distance:  %1").arg(distance);
   }
   _lblDistanceInfo->setText(text);
+}
+
+void Viewer::UpdateFps(float fps)
+{
+  std::string msg = "fps:";
+  msg += std::to_string((int)fps);
+  _FpsLabel->setText(msg.c_str());
 }

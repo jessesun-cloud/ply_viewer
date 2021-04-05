@@ -170,7 +170,6 @@ void Scene::initializeGL()
 
 void Scene::paintGL()
 {
-  double start = GetTickCount();
   auto startt = std::chrono::system_clock::now();
   // ensure GL flags
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -208,7 +207,7 @@ void Scene::paintGL()
   _shaders->setUniformValue("colorAxisMode", static_cast<GLfloat>(_colorMode));
   _shaders->setUniformValue("pointsBoundMin", _pointsBoundMin);
   _shaders->setUniformValue("pointsBoundMax", _pointsBoundMax);
-  glDrawArrays(GL_POINTS, 0, _pointsData.size());
+  glDrawArrays(GL_POINTS, 0, _pointsData.size()/4);
   _shaders->release();
 
   //
@@ -239,17 +238,14 @@ void Scene::paintGL()
   }
 
   _drawFrameAxis();
-  double end = GetTickCount();
   auto endt = std::chrono::system_clock::now();
   std::chrono::duration<double> elapsed_seconds;
-  {
-    elapsed_seconds = endt - startt;
-  }
+  elapsed_seconds = endt - startt;  
   static double avg = 0;
   double time = elapsed_seconds.count();
-  avg = avg * .9 + 0.1 * (time) / 1000.0;
-  int fps = 1 / (avg + 0.0001);
-  printf("fps %d\r", fps);
+  avg = avg * .9 + 0.1 * (time);
+  float fps = 1 / (avg + 0.0001);
+  emit FpsChanged(fps);
 }
 
 

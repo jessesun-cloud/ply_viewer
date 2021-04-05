@@ -18,7 +18,6 @@ public:
 
   Viewer(const QString& filePath);
 
-
 protected:
   void wheelEvent(QWheelEvent *);
   void keyPressEvent(QKeyEvent *);
@@ -27,6 +26,7 @@ protected:
 private slots:
   void _updatePointSize(int);
   void _updateMeasureInfo(const QVector<QVector3D>& points);
+  void UpdateFps(float fps);
 
 
 private:
@@ -35,5 +35,6 @@ private:
   QSharedPointer<Camera> _camera;
   QLabel* _lblColorBy;
   QLabel* _lblDistanceInfo;
+  QLabel * _FpsLabel;
 
 };
